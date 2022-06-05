@@ -45,16 +45,17 @@ public class BookManagerControllerTests {
 
     @Test
     public void testGetAllBooksReturnsBooks() throws Exception {
-
+        //Arrange
         List<Book> books = new ArrayList<>();
         books.add(new Book(1L, "Book One", "This is the description for Book One", "Person One", Genre.Education));
         books.add(new Book(2L, "Book Two", "This is the description for Book Two", "Person Two", Genre.Education));
         books.add(new Book(3L, "Book Three", "This is the description for Book Three", "Person Three", Genre.Education));
-
+        //Stub
         when(mockBookManagerServiceImpl.getAllBooks()).thenReturn(books);
-
+        //Act
         this.mockMvcController.perform(
             MockMvcRequestBuilders.get("/api/v1/book/"))
+                //Assert
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
             .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Book One"))
@@ -80,15 +81,18 @@ public class BookManagerControllerTests {
 
     @Test
     public void testPostMappingAddABook() throws Exception {
-
+        //Arrange
         Book book = new Book(4L, "Book Four", "This is the description for Book Four", "Person Four", Genre.Fantasy);
 
+         //Stub  -  substitute for bookMangaerService
         when(mockBookManagerServiceImpl.insertBook(book)).thenReturn(book);
 
+        //Act
         this.mockMvcController.perform(
                 MockMvcRequestBuilders.post("/api/v1/book/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(book)))
+                //Assert
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
         verify(mockBookManagerServiceImpl, times(1)).insertBook(book);
